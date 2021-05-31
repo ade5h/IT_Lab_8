@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from .models import Location, Seller, Amenity
+from .models import Cab
 
-admin.site.register(Location)
-admin.site.register(Seller)
-admin.site.register(Amenity)
+admin.site.register(Cab)

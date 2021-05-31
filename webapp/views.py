@@ -1,39 +1,32 @@
 from rest_framework import generics
-from .models import Location, Seller, Amenity
-from .serializers import SellerSerializer, LocationSerializer, AmenitySerializer
+from django.http import HttpResponse
+from django.http import JsonResponse
+from .models import Cab
+from .serializers import CabSerializer
 
-class LocationList(generics.ListCreateAPIView):
-	queryset = Location.objects.all()
-	serializer_class = LocationSerializer
+def get_eta(x1, x2, y1, y2):
+	ans = (((x1-x2)*(x1-x2)) + ((y1-y2)*(y1-y2)))/200
+	return int(ans)
 
-class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Location.objects.all()
-	serializer_class = LocationSerializer
+class CabList(generics.ListCreateAPIView):
+	queryset = Cab.objects.all()
+	serializer_class = CabSerializer
 
-class SellerList(generics.ListCreateAPIView):
-	queryset = Seller.objects.all()
-	serializer_class = SellerSerializer
+def getETA(request, pk):
+	user_lattitude = int(request.GET['lattitude'])
+	user_longitude = int(request.GET['longitude'])
 
-class SellerDetail(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Seller.objects.all()
-	serializer_class = SellerSerializer
+	required_cab = Cab.objects.get(pk=pk)
 
-class AmenityList(generics.ListCreateAPIView):
-	serializer_class = AmenitySerializer
+	fare = int(getattr(required_cab, 'fare'))
+	cab_lattitude = int(getattr(required_cab, 'latitude'))
+	cab_longitude = int(getattr(required_cab, 'longitude'))
 
-	def get_queryset(self):
-		queryset = Amenity.objects.all()
+	eta = get_eta(user_lattitude, cab_lattitude, user_longitude, cab_longitude)
 
-		location = self.request.query_params.get('location')
-		if location is not None:
-			queryset = queryset.filter(location_id=location)
-		
-		name = self.request.query_params.get('name')
-		if name is not None:
-			queryset = queryset.filter(name=name)
-		
-		return queryset
+	output = {
+		'fare': fare,
+		'eta': eta
+	}
 
-class AmenityDetail(generics.RetrieveUpdateDestroyAPIView):
-	queryset = Amenity.objects.all()
-	serializer_class = AmenitySerializer
+	return JsonResponse(output)
