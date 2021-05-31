@@ -1,17 +1,17 @@
 from rest_framework import serializers
-from .models import Restaurant, Location, Staff
+from .models import Location, Seller, Amenity
 
 class LocationSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Location
 		fields = "__all__"
 
-class RestaurantSerializer(serializers.ModelSerializer):
+class SellerSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Restaurant
+		model = Seller
 		fields = "__all__"
 
-class StaffSerializer(serializers.ModelSerializer):
+class AmenitySerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Staff
+		model = Amenity
 		fields = "__all__"

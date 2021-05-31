@@ -8,18 +8,18 @@ class Location(models.Model):
 	def __str__(self):
 		return self.name
 
-class Restaurant(models.Model):
+class Seller(models.Model):
 	name = models.CharField(max_length=50)
-	location = models.ForeignKey(Location, on_delete=models.CASCADE)
-	cuisine = models.CharField(max_length=50)
+	rating = models.IntegerField()
 
 	def __str__(self):
 		return self.name
 
-class Staff(models.Model):
+class Amenity(models.Model):
 	name = models.CharField(max_length=50)
-	restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-	years_of_experience = models.IntegerField()
+	location = models.ForeignKey(Location, on_delete=models.CASCADE)
+	seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+	quantity = models.IntegerField()
 
 	def __str__(self):
 		return self.name
